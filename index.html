@@ -1,0 +1,93 @@
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="title" content="Pano Shooter">
+<meta name="description" content="Let's Try a Game.">
+<meta name="keywords" content="panorama, game">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="author" content="Joel Fiser">
+
+<script src="./js/jquery-3.0.0.min.js"></script>
+<script src=./js/hammer.min.js></script>
+<script src="./js/TweenLite.min.js"></script>
+<script src="./js/CSSPlugin.min.js"></script>
+<script src="./js/EasePack.min.js"></script>
+<script src="./js/three.js"></script>
+<script src="./js/Three.FirstPersonControls.js"></script>
+<script src="./js/OrbitControls.js"></script>
+<script src="./js/Projector.js"></script>
+
+<script src="./js/Main.js"></script>
+<script src="./js/ChromaKeyMaterial.js"></script>
+<script src="./js/Shooter3d.js"></script>
+
+<style>
+html, body{
+    width:100%;
+    height:100%;
+    margin:0;
+}
+
+#shooter3dHolder{
+    width:100%;
+    height:100%;
+    margin:0 auto;
+    background:pink;
+    position:relative;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="shooter3dHolder"></div>
+
+<script id="vertexShader" type="x-shader/x-vertex">
+
+	varying vec2 vUv;
+
+	void main()
+	{
+		vUv = uv;
+		vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+		gl_Position = projectionMatrix * mvPosition;
+	}
+
+</script>
+
+<script id="fragmentShader" type="x-shader/x-fragment">
+
+	uniform sampler2D texture;
+	uniform vec3 color;
+
+	varying vec2 vUv;
+
+	void main()
+	{
+		vec3 tColor = texture2D( texture, vUv ).rgb;
+		float a = (length(tColor - color) - 0.5) * 7.0;
+		
+//		gl_FragColor = vec4(a, a, a, 1.0);
+		gl_FragColor = vec4(tColor, a);
+	}
+</script>
+
+
+
+<script>
+var jf_main;
+
+$(document).ready(function(){
+    jf_main = new Main();
+});
+
+</script>
+
+   
+</body>
+
+</html>
