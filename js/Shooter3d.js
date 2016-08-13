@@ -279,8 +279,8 @@ Shooter3d.prototype.setupScene = function(){
     
     // Start Chroma
     //this.movieMaterial = new ChromaKeyMaterial('./video/cat.mp4', 596, 336, 0xd400);
-    //this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400);
-    this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400);
+    this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400);
+    //this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400);
     //this.movieMaterial = new ChromaKeyMaterial('./video/skeleton.mp4', 596, 336, 0xd400);
 
 	var movieGeometry = new THREE.PlaneGeometry(596, 336, 4, 4);
