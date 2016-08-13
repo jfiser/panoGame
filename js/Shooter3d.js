@@ -191,9 +191,9 @@ Shooter3d.prototype.render = function(){
         
         //console.log("b.position.z: " + b.position.z);
         // remove bullet after it's too far
-        if (Math.abs(b.position.x) > 1200
-                    || Math.abs(b.position.y) > 1200
-                    || Math.abs(b.position.z) > 1200){
+        if (Math.abs(b.position.x) > 4000
+                    || Math.abs(b.position.y) > 4000
+                    || Math.abs(b.position.z) > 4000){
             this.bullets.splice(i, 1);
             this.scene.remove(b);
             continue;
@@ -229,19 +229,20 @@ Shooter3d.prototype.checkGirlCollide = function(_girl){
         //console.log("where: %o", where);
         //console.log("where: " + _girl.position.z + " : " + this.bullets[i].position.z);
         if((_girl.position.z > 0  
-                && this.bullets[i].position.z > _girl.position.z 
+                && this.bullets[i].position.z > _girl.position.z // after it passes thru
                 && Math.abs(Math.abs(this.bullets[i].position.z) - Math.abs(_girl.position.z)) < 20
                 && Math.abs(Math.abs(this.bullets[i].position.x) - Math.abs(_girl.position.x)) < 40
-                && Math.abs(Math.abs(this.bullets[i].position.y) - Math.abs(_girl.position.y)) < 40
+                && Math.abs(Math.abs(this.bullets[i].position.y) - Math.abs(_girl.position.y)) < 140
                 )
                         || 
             (_girl.position.z < 0 
                 && this.bullets[i].position.z < _girl.position.z
                 && Math.abs(Math.abs(this.bullets[i].position.z) - Math.abs(_girl.position.z)) < 20
                 && Math.abs(Math.abs(this.bullets[i].position.x) - Math.abs(_girl.position.x)) < 40
-                && Math.abs(Math.abs(this.bullets[i].position.y) - Math.abs(_girl.position.y)) < 40))
+                && Math.abs(Math.abs(this.bullets[i].position.y) - Math.abs(_girl.position.y)) < 140))
         {
                 console.log("HIT");
+                this.scene.remove(_girl);
         }
         //if ( where.length > 0 && where[0].distance < directionVector.length()){
 			//console.log("HIT!!!");
@@ -362,8 +363,8 @@ var cubeMaterial = new THREE.MeshFaceMaterial(materials);
     
     // Start Chroma
     //this.movieMaterial = new ChromaKeyMaterial('./video/cat.mp4', 596, 336, 0xd400);
-    //this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400);
-    this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400);
+    this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400);
+    //this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400);
     //this.movieMaterial = new ChromaKeyMaterial('./video/collection.mp4', 596, 336, 0xd400);
 
 	var movieGeometry = new THREE.PlaneGeometry(596, 336, 4, 4);
