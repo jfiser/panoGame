@@ -171,8 +171,16 @@ Shooter3d.prototype.render = function(){
 	this.controls.update(delta); // Move camera
     this.movieMaterial.update();
 
-    for (var i in this.girls){
+    for (var i = 0; i < this.girls.length; i++){
         this.girls[i].lookAt(this.cam.position);
+        //console.log("this.girls[i] %o", this.girls[i].children[0]);
+        if (this.checkGirlCollide(this.girls[i])){
+            console.log("HIT!!!");
+            //this.bullets.splice(i, 1);
+            //this.scene.remove(b);
+            continue;
+        }
+
     }
 	
 	// Update bullets. Walk backwards through the list so we can remove items.
@@ -180,6 +188,17 @@ Shooter3d.prototype.render = function(){
 		var b = this.bullets[i], 
             p = b.position, 
             d = b.ray.direction;
+        
+        //console.log("b.position.z: " + b.position.z);
+        // remove bullet after it's too far
+        if (Math.abs(b.position.x) > 1200
+                    || Math.abs(b.position.y) > 1200
+                    || Math.abs(b.position.z) > 1200){
+            this.bullets.splice(i, 1);
+            this.scene.remove(b);
+            continue;
+        }
+
 		//if (!hit) {
         b.translateX(speed * d.x);
         b.translateY(speed * d.y);
@@ -187,6 +206,71 @@ Shooter3d.prototype.render = function(){
 		//}
 	}
 	this.renderer.render(this.scene, this.cam); // Repaint
+}
+Shooter3d.prototype.checkGirlCollide = function(_girl){
+    var v1 = _girl.children[0].geometry.vertices[0].clone(),
+        v2 = _girl.children[0].geometry.vertices[1].clone(),
+        v3 = _girl.children[0].geometry.vertices[2].clone();
+    var i, ray, where;
+
+    var plane = new THREE.Plane();
+    plane.setFromCoplanarPoints (v1, v2, v3);
+    //console.log("plane %o", plane);
+
+
+    // x, y, z: position of your object
+    for(i = 0; i < this.bullets.length; i++){
+        ray = new THREE.Ray (
+                            new THREE.Vector3(this.bullets[i].position.x, 
+                                                this.bullets[i].position.y,
+                                                this.bullets[i].position.z),
+                                                new THREE.Vector3(0, 1, 0));
+        where = ray.intersectPlane (plane);
+        //console.log("where: %o", where);
+        //console.log("where: " + _girl.position.z + " : " + this.bullets[i].position.z);
+        if((_girl.position.z > 0  
+                && this.bullets[i].position.z > _girl.position.z 
+                && Math.abs(Math.abs(this.bullets[i].position.z) - Math.abs(_girl.position.z)) < 20
+                && Math.abs(Math.abs(this.bullets[i].position.x) - Math.abs(_girl.position.x)) < 40
+                && Math.abs(Math.abs(this.bullets[i].position.y) - Math.abs(_girl.position.y)) < 40
+                )
+                        || 
+            (_girl.position.z < 0 
+                && this.bullets[i].position.z < _girl.position.z
+                && Math.abs(Math.abs(this.bullets[i].position.z) - Math.abs(_girl.position.z)) < 20
+                && Math.abs(Math.abs(this.bullets[i].position.x) - Math.abs(_girl.position.x)) < 40
+                && Math.abs(Math.abs(this.bullets[i].position.y) - Math.abs(_girl.position.y)) < 40))
+        {
+                console.log("HIT");
+        }
+        //if ( where.length > 0 && where[0].distance < directionVector.length()){
+			//console.log("HIT!!!");
+            //return(true);
+        //}
+    }
+    
+    
+    /*object.updateMatrixWorld();
+    var vector = object.geometry.vertices[i].clone();
+    vector.applyMatrix4( object.matrixWorld );
+
+    ////////
+    var originPoint = _bullet.position.clone();
+    console.log("originPoint: %o", originPoint);
+	for(var vertexIndex = 0; vertexIndex < _bullet.geometry.vertices.length; vertexIndex++){		
+		var localVertex = _bullet.geometry.vertices[vertexIndex].clone();
+		var globalVertex = localVertex.applyMatrix4( _bullet.matrix );
+		var directionVector = globalVertex.sub( _bullet.position );
+		
+		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+		var collisionResults = ray.intersectObjects( this.girls );
+		if ( collisionResults.length > 0 && 
+                            collisionResults[0].distance < directionVector.length()){
+			//console.log("HIT!!!");
+            return(true);
+        }
+	}*/	
+    
 }
 Shooter3d.prototype.addBullet = function(obj){
 	if (obj === undefined) {
