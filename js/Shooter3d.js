@@ -2,30 +2,12 @@ function Shooter3d(_main){
     var _self = this;
 
     this.main = _main;
-    this.BULLETMOVESPEED = 500;
+    this.BULLETMOVESPEED = 1200;
 	this.PROJECTILEDAMAGE = 20;
 	this.UNITSIZE = 250;
     this.WALLHEIGHT = this.UNITSIZE / 3,
 	this.MOVESPEED = 100;
 	this.LOOKSPEED = 0.075;
-    this.map =  [ // 1  2  3  4  5  6  7  8  9
-           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 0
-           [1, 1, 0, 0, 0, 0, 0, 1, 1, 1,], // 1
-           [1, 1, 0, 0, 2, 0, 0, 0, 0, 1,], // 2
-           [1, 0, 0, 0, 0, 2, 0, 0, 0, 1,], // 3
-           [1, 0, 0, 2, 0, 0, 2, 0, 0, 1,], // 4
-           [1, 0, 0, 0, 2, 0, 0, 0, 1, 1,], // 5
-           [1, 1, 1, 0, 0, 0, 0, 1, 1, 1,], // 6
-           [1, 1, 1, 0, 0, 1, 0, 0, 1, 1,], // 7
-           [1, 1, 1, 1, 1, 1, 0, 0, 1, 1,], // 8
-           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1,], // 9
-           ];
-    this.mapW = this.map.length;
-    this.mapH = this.map[0].length;
-
-
-
-
 
     this.mouse = { x: 0, y: 0 };
     this.realMouse = { x: 0, y: 0 };
@@ -149,8 +131,8 @@ Shooter3d.prototype.init = function(){
         _self.mouse.x = (evt.clientX / $("#shooter3dHolder").width()) * 2 - 1;
         _self.mouse.y = - (evt.clientY / $("#shooter3dHolder").height()) * 2 + 1;
         //_self.rotatePano(evt);
-        _self.realMouse.x = evt.clientX;
-        _self.realMouse.y = evt.clientY;
+        //_self.realMouse.x = evt.clientX;
+        //_self.realMouse.y = evt.clientY;
     });
 	
 	// Shoot on click
@@ -249,29 +231,6 @@ Shooter3d.prototype.checkGirlCollide = function(_girl){
             //return(true);
         //}
     }
-    
-    
-    /*object.updateMatrixWorld();
-    var vector = object.geometry.vertices[i].clone();
-    vector.applyMatrix4( object.matrixWorld );
-
-    ////////
-    var originPoint = _bullet.position.clone();
-    console.log("originPoint: %o", originPoint);
-	for(var vertexIndex = 0; vertexIndex < _bullet.geometry.vertices.length; vertexIndex++){		
-		var localVertex = _bullet.geometry.vertices[vertexIndex].clone();
-		var globalVertex = localVertex.applyMatrix4( _bullet.matrix );
-		var directionVector = globalVertex.sub( _bullet.position );
-		
-		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-		var collisionResults = ray.intersectObjects( this.girls );
-		if ( collisionResults.length > 0 && 
-                            collisionResults[0].distance < directionVector.length()){
-			//console.log("HIT!!!");
-            return(true);
-        }
-	}*/	
-    
 }
 Shooter3d.prototype.addBullet = function(obj){
 	if (obj === undefined) {
@@ -317,55 +276,12 @@ Shooter3d.prototype.setupScene = function(){
 	var directionalLight2 = new THREE.DirectionalLight( 0xF7EFBE, 0.5 );
 	directionalLight2.position.set( -0.5, -1, -0.5 );
 	this.scene.add( directionalLight2 );
-
-    // set up the sphere vars
-    var radius = 150,
-        segments = 16,
-        rings = 16;
-
-    // create a new mesh with
-    // sphere geometry - we will cover
-    // the sphereMaterial next!
-    var sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(22, segments, rings),
-            this.bulletMaterial);
-	
-    //sphere.position.set(this.cam.position.x, this.cam.position.y -100, this.cam.position.z);
-    sphere.position.set(0, 277, 1700);
-    // add the sphere to the scene
-    this.scene.add(sphere);
-
-// Geometry: walls
-
-var materials = [ 
-    new THREE.MeshBasicMaterial({color:0x33AA55, transparent:true, opacity:0.8}),
-    new THREE.MeshBasicMaterial({color:0x55CC00, transparent:true, opacity:0.8}), 
-    new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.8}),
-    new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.8}), 
-    new THREE.MeshBasicMaterial({color:0x0000FF, transparent:true, opacity:0.8}), 
-    new THREE.MeshBasicMaterial({color:0x5555AA, transparent:true, opacity:0.8}), 
-]; 
-// create a MeshFaceMaterial, allows cube to have different materials on each face 
-var cubeMaterial = new THREE.MeshFaceMaterial(materials); 
-//var cube = new THREE.Mesh(geometry, cubeMaterial);
-
-	var cube = new THREE.CubeGeometry(250, 100, 250);
-	/*var materials = [
-	                 new THREE.MeshLambertMaterial({color: 0x00CCAA}),//,map: t.ImageUtils.loadTexture('images/wall-1.jpg')}),
-	                 new THREE.MeshLambertMaterial({color: 0xC5EDA0}),//map: t.ImageUtils.loadTexture('images/wall-2.jpg')}),
-	                 new THREE.MeshLambertMaterial({color: 0x0099ff})
-	                 ];*/
-    var wall = new THREE.Mesh(cube, cubeMaterial);
-    wall.position.set(0, 0, 700);
-    wall.rotation.y = 3.14159 / 2;
-    this.scene.add(wall);
-
     
     // Start Chroma
     //this.movieMaterial = new ChromaKeyMaterial('./video/cat.mp4', 596, 336, 0xd400);
-    this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400);
-    //this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400);
-    //this.movieMaterial = new ChromaKeyMaterial('./video/collection.mp4', 596, 336, 0xd400);
+    //this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400);
+    this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400);
+    //this.movieMaterial = new ChromaKeyMaterial('./video/skeleton.mp4', 596, 336, 0xd400);
 
 	var movieGeometry = new THREE.PlaneGeometry(596, 336, 4, 4);
 
@@ -385,57 +301,6 @@ var cubeMaterial = new THREE.MeshFaceMaterial(materials);
                 this.girls.push(girl);
             }
 
-	/*var cube = new THREE.CubeGeometry(100, 100, 100);
-	var materials = [
-	                 new THREE.MeshLambertMaterial({color: 0x00CCAA}),//,map: t.ImageUtils.loadTexture('images/wall-1.jpg')}),
-	                 new THREE.MeshLambertMaterial({color: 0xC5EDA0}),//map: t.ImageUtils.loadTexture('images/wall-2.jpg')}),
-	                 new THREE.MeshLambertMaterial({color: 0xFBEBCD})
-	                 ];
-	for (var i = 0; i < this.mapW; i++) {
-		for (var j = 0, m = this.map[i].length; j < m; j++) {
-			if (this.map[i][j]) {
-				//var wall = new THREE.Mesh(cube, materials[this.map[i][j]-1]);
-                console.log("WALL");
-				var wall = new THREE.Mesh(cube, materials[1]);
-				wall.position.x = (i - units/2) * this.UNITSIZE;
-				wall.position.y = this.WALLHEIGHT/2;
-				wall.position.z = (j - units/2) * this.UNITSIZE;
-				this.scene.add(wall);
-			}
-		}
-	}*/
 }
 
-
-
-/*Shooter3d.prototype.rotatePano = function(_evt){
-    var _dir = null, _increment = 0;
-    //console.log("spinPanorama: %o", _evt);
-    //console.log(_evt.clientX + ":" + this.realMouse.x);
-    if(_evt.clientX == this.realMouse.x){
-        return;
-    }
-    if(_evt.clientX > this.realMouse.x){
-        _dir = "right";
-        increment = this.spinIncrement;
-    }
-    else{
-        _dir = "left";
-        increment = this.spinIncrement*-1;
-    }
-
-    try{
-        var pov = this.main.streetView.panorama.getPov();
-        pov.heading += increment;
-        if(pov.heading > 360.0) {
-            pov.heading -= 360.0;
-        }
-        if(pov.heading < 0.0) {
-            pov.heading += 360.0;
-        }
-        this.main.streetView.panorama.setPov(pov);
-    }catch(e){
-        console.log("caught: %o", e);
-    }
-}*/
 
