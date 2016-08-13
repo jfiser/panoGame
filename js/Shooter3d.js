@@ -170,15 +170,20 @@ Shooter3d.prototype.render = function(){
 	var aispeed = delta * this.MOVESPEED;
 	this.controls.update(delta); // Move camera
     this.movieMaterial.update();
-    for (var i in this.girls) this.girls[i].lookAt(this.cam.position);
+
+    for (var i in this.girls){
+        this.girls[i].lookAt(this.cam.position);
+    }
 	
 	// Update bullets. Walk backwards through the list so we can remove items.
 	for (var i = this.bullets.length-1; i >= 0; i--) {
-		var b = this.bullets[i], p = b.position, d = b.ray.direction;
+		var b = this.bullets[i], 
+            p = b.position, 
+            d = b.ray.direction;
 		//if (!hit) {
-			b.translateX(speed * d.x);
-			b.translateY(speed * d.y);
-			b.translateZ(speed * d.z);
+        b.translateX(speed * d.x);
+        b.translateY(speed * d.y);
+        b.translateZ(speed * d.z);
 		//}
 	}
 	this.renderer.render(this.scene, this.cam); // Repaint
