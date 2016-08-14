@@ -1,0 +1,43 @@
+{
+	"metadata": {
+		"version": 4.4,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+	"geometries": [
+		{
+			"uuid": "9D018A5B-B2D9-407D-9C74-A47D3191BF84",
+			"type": "CylinderBufferGeometry",
+			"radiusTop": 1,
+			"radiusBottom": 1,
+			"height": 2,
+			"radialSegments": 32,
+			"heightSegments": 1,
+			"openEnded": false
+		}],
+	"materials": [
+		{
+			"uuid": "D2E426FB-4572-46EE-AEFE-8CC23A1F05EA",
+			"type": "ShaderMaterial",
+			"side": 2,
+			"vertexColors": 1,
+			"uniforms": {},
+			"vertexShader": "void main() {\n\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}",
+			"fragmentShader": "void main() {\n\tgl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );\n}"
+		}],
+	"object": {
+		"uuid": "ED7E6ABB-16A1-47DC-92AE-88AAC12D782F",
+		"type": "Scene",
+		"name": "Scene",
+		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+		"children": [
+			{
+				"uuid": "8B925220-77FC-4876-A567-9D3C8534EA24",
+				"type": "Mesh",
+				"name": "Cylinder 1",
+				"matrix": [2.7904696464538574,-2.396131992340088,0,0,1.5550230741500854,1.8109372854232788,0,0,0,0,3.3313727378845215,0,-0.22373813390731812,-9.532133102416992,-2.76688814163208,1],
+				"geometry": "9D018A5B-B2D9-407D-9C74-A47D3191BF84",
+				"material": "D2E426FB-4572-46EE-AEFE-8CC23A1F05EA"
+			}]
+	}
+}
