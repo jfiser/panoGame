@@ -78,6 +78,9 @@ Shooter3d.prototype.animate = function(){
 	requestAnimationFrame(this.animate.bind(this));
 	this.render();
     //console.log("animate");
+    //if(this.tweening){
+        //this.tweenUpdate(this.theGirl, this.tweenIncrement);
+    //}
 }
 Shooter3d.prototype.init = function(){
 	var _self = this;
@@ -190,26 +193,9 @@ Shooter3d.prototype.render = function(){
 	this.renderer.render(this.scene, this.cam); // Repaint
 }
 Shooter3d.prototype.checkGirlCollide = function(_girl){
-    var v1 = _girl.children[0].geometry.vertices[0].clone(),
-        v2 = _girl.children[0].geometry.vertices[1].clone(),
-        v3 = _girl.children[0].geometry.vertices[2].clone();
-    var i, ray, where;
-
-    var plane = new THREE.Plane();
-    plane.setFromCoplanarPoints (v1, v2, v3);
-    //console.log("plane %o", plane);
-
-
-    // x, y, z: position of your object
+    var _self = this;
+    
     for(i = 0; i < this.bullets.length; i++){
-        ray = new THREE.Ray (
-                            new THREE.Vector3(this.bullets[i].position.x, 
-                                                this.bullets[i].position.y,
-                                                this.bullets[i].position.z),
-                                                new THREE.Vector3(0, 1, 0));
-        where = ray.intersectPlane (plane);
-        //console.log("where: %o", where);
-        //console.log("where: " + _girl.position.z + " : " + this.bullets[i].position.z);
         if((_girl.position.z > 0  
                 && this.bullets[i].position.z > _girl.position.z // after it passes thru
                 && Math.abs(Math.abs(this.bullets[i].position.z) - Math.abs(_girl.position.z)) < 20
@@ -224,13 +210,50 @@ Shooter3d.prototype.checkGirlCollide = function(_girl){
                 && Math.abs(Math.abs(this.bullets[i].position.y) - Math.abs(_girl.position.y)) < 140))
         {
                 console.log("HIT");
-                this.scene.remove(_girl);
+                //this.scene.remove(_girl);
+                //_girl.children[0].scale.set( 1.1, 1.1, 1 );
+                //_girl.translateX(100);
+
+                //var a = [1,2,3,4];
+                //var b = [0,0,0,0];
+                /*var a = [0];
+                var b = [3];
+                b.onUpdate = function() {
+                    console.log(a[0]);
+                    _girl.translateY(a[0]);
+                };
+                var tween = TweenLite.to(a, 1, b);*/
+                //tween.ease = Power2.easeOut;
+
+                var a = {0:0};
+                var b = {ease:Elastic.easeOut, 0:3, onUpdate:function(){
+                                _self.tweenUpdate(_girl, a[0]);
+                                //_self.theGirl = _girl;
+                                //_self.tweenIncrement = a[0];
+                            }
+                        };
+                //b.onUpdate = function() {
+                    //console.log(a[0]);
+                    //_girl.translateY(a[0]); // works
+                    //_girl.position.y += a[0]; // works
+                //};
+                //this.tweening = true;
+                TweenLite.to(a, 1, b);
+                //TweenLite.to(graph, 2.5, { ease: Expo.easeOut, y: 0 });
+
+                //yourMeshObject.material.transparent = true;
+                //TweenLite.to(_girl.children[0].material, 1, {opacity: 0});
         }
         //if ( where.length > 0 && where[0].distance < directionVector.length()){
 			//console.log("HIT!!!");
             //return(true);
         //}
     }
+}
+Shooter3d.prototype.tweenUpdate = function(_girl, _val){
+    console.log(_val);
+    //_girl.translateY(a[0]); // works
+    _girl.position.y += _val; // works
 }
 Shooter3d.prototype.addBullet = function(obj){
 	if (obj === undefined) {
