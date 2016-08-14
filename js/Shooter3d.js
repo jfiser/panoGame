@@ -100,7 +100,7 @@ Shooter3d.prototype.init = function(){
         this.controls = new THREE.FirstPersonControls(this.cam);
         this.controls.movementSpeed = this.MOVESPEED;
         this.controls.lookSpeed = this.LOOKSPEED;
-        this.controls.lookVertical = false; // Temporary solution; play on flat surfaces only
+        //this.controls.lookVertical = false; // Temporary solution; play on flat surfaces only
         this.controls.noFly = true;
     }
     else{
@@ -224,21 +224,24 @@ Shooter3d.prototype.checkGirlCollide = function(_girl){
                 };
                 var tween = TweenLite.to(a, 1, b);*/
                 //tween.ease = Power2.easeOut;
-
-                var a = {0:0};
-                var b = {ease:Elastic.easeOut, 0:3, onUpdate:function(){
-                                _self.tweenUpdate(_girl, a[0]);
-                                //_self.theGirl = _girl;
-                                //_self.tweenIncrement = a[0];
-                            }
-                        };
-                //b.onUpdate = function() {
-                    //console.log(a[0]);
-                    //_girl.translateY(a[0]); // works
-                    //_girl.position.y += a[0]; // works
-                //};
-                //this.tweening = true;
-                TweenLite.to(a, 1, b);
+                if(!this.tweening){
+			        console.log("tweening!");
+                    this.tweening = true;
+                    var a = {0:0};
+                    var b = {ease:Expo.easeOut, 0:3, onUpdate:function(){
+                                    _self.tweenUpdate(_girl, a[0]);
+                                },
+                                onComplete:function(){
+                                    _self.tweening = false;
+                                }
+                            };
+                    //b.onUpdate = function() {
+                        //console.log(a[0]);
+                        //_girl.translateY(a[0]); // works
+                        //_girl.position.y += a[0]; // works
+                    //};
+                    TweenLite.to(a, 2, b);
+                }
                 //TweenLite.to(graph, 2.5, { ease: Expo.easeOut, y: 0 });
 
                 //yourMeshObject.material.transparent = true;
@@ -302,9 +305,10 @@ Shooter3d.prototype.setupScene = function(){
     
     // Start Chroma
     //this.movieMaterial = new ChromaKeyMaterial('./video/cat.mp4', 596, 336, 0xd400);
-    this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400);
+    //this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400);
     //this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400);
-    //this.movieMaterial = new ChromaKeyMaterial('./video/skeleton.mp4', 596, 336, 0xd400);
+    //this.movieMaterial = new ChromaKeyMaterial('./video/chickDancing.mp4', 596, 336, 0xd400);
+    this.movieMaterial = new ChromaKeyMaterial('./video/bloodSplat2.mp4', 596, 336, 0xd400);
 
 	var movieGeometry = new THREE.PlaneGeometry(596, 336, 4, 4);
 
