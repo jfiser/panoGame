@@ -1,11 +1,13 @@
-function ChromaKeyMaterial(url, width, height, keyColor) {
+function ChromaKeyMaterial(url, width, height, keyColor, autoPlay) {
 	THREE.ShaderMaterial.call(this);
 
 	this.video = document.createElement('video');
-	this.video.loop = true;
 	this.video.src = url;
-	this.video.load();
-	this.video.play();
+	if(autoPlay){
+		this.video.loop = true;
+		this.video.load();
+		this.video.play();
+	}
 
 	var videoImage = document.createElement('canvas');
     $(videoImage).css("display", "none"); // hide the real player
