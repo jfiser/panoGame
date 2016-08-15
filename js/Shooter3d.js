@@ -29,6 +29,7 @@ function Shooter3d(_main){
     this.bulletMaterial = new THREE.MeshLambertMaterial({color: 0xcc0000});
     
     this.bulletGeo = new THREE.SphereGeometry(2, 12, 12);
+    this.setHitSound();
 
     this.init();
     this.animate();
@@ -39,8 +40,8 @@ function Shooter3d(_main){
 }
 
 Shooter3d.prototype.addSkyBox = function(){
-    //var r = "textures/stPeters/";
-    var r = "textures/footballfield/"; // zz
+    var r = "textures/stPeters/";
+    //var r = "textures/footballfield/"; // zz
     //var r = "textures/yokohama3/";
 				var urls = [ r + "posx.jpg", r + "negx.jpg",
 							 r + "posy.jpg", r + "negy.jpg",
@@ -217,6 +218,7 @@ Shooter3d.prototype.checkGirlCollide = function(_girl){
                 _girl.add(_girl.bloodSplatMovie);
                 this.bloodSplatMaterial.playVideo();
                 setTimeout(function(){ _self.scene.remove(_girl) }, 1600);
+                this.audio.play();
                 //_girl.translateX(100);
 
                 //var a = [1,2,3,4];
@@ -313,8 +315,8 @@ Shooter3d.prototype.setupScene = function(){
     // Start Chroma
     //this.movieMaterial = new ChromaKeyMaterial('./video/cat.mp4', 596, 336, 0xd400);
     this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400, true);
-    //this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400);
-    //this.movieMaterial = new ChromaKeyMaterial('./video/chickDancing.mp4', 596, 336, 0xd400);
+    //this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400, true);
+    //this.movieMaterial = new ChromaKeyMaterial('./video/chickDancing.mp4', 596, 336, 0xd400, true);
     //this.movieMaterial = new ChromaKeyMaterial('./video/bloodSplat2.mp4', 596, 336, 0xd400);
 
     this.bloodSplatMaterial = new ChromaKeyMaterial('./video/bloodExplode.mp4', 596, 336, 0xd400, false);
@@ -343,5 +345,11 @@ Shooter3d.prototype.setupScene = function(){
             }
 
 }
-
+Shooter3d.prototype.setHitSound = function(){
+    this.audio = document.createElement('audio');
+    var source = document.createElement('source');
+    source.src = './audio/splatz.mp3';
+    this.audio.appendChild(source);
+    //audio.play();
+}
 

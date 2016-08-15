@@ -3,9 +3,11 @@ function ChromaKeyMaterial(url, width, height, keyColor, autoPlay) {
 
 	this.video = document.createElement('video');
 	this.video.src = url;
+	this.videoLoaded = false;
 	if(autoPlay){
 		this.video.loop = true;
 		this.video.load();
+		this.videoLoaded = true;
 		this.video.play();
 	}
 
@@ -59,7 +61,14 @@ ChromaKeyMaterial.prototype = Object.create(THREE.ShaderMaterial.prototype);
 
 ChromaKeyMaterial.prototype.playVideo = function(){
     console.log("PlayVideo");
-    this.video.load();
+	if(!this.videoLoaded){
+		this.video.load();
+    	this.video.play();
+		this.videoLoaded = true;
+	}
+	else{
+		this.video.currentTime = 0;
+	}
     this.video.play();
 }
 
