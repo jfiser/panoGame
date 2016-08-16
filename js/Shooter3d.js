@@ -93,7 +93,7 @@ Shooter3d.prototype.init = function(){
 	// Set up camera
 	this.cam = new THREE.PerspectiveCamera(70, this.ASPECT, 1, 10000); // FOV, aspect, near, far
 	//this.cam.position.y = this.UNITSIZE * .2;
-    this.cam.position.set( 0, 0, 0 );
+    this.cam.position.set( 5, 0, 0 );
 	this.scene.add(this.cam);
 	
     if(!this.main.isTouchDevice()){
@@ -156,6 +156,7 @@ Shooter3d.prototype.render = function(){
 	var aispeed = delta * this.MOVESPEED;
 	this.controls.update(delta); // Move camera
     this.movieMaterial.update();
+    this.movie2Material.update();
     this.bloodSplatMaterial.update();
 
     for (var i = 0; i < this.girls.length; i++){
@@ -212,15 +213,32 @@ Shooter3d.prototype.checkGirlCollide = function(_girl){
                 && Math.abs(Math.abs(this.bullets[i].position.y) - Math.abs(_girl.position.y)) < 140))
         {
                 console.log("$$$>>>HIT");
-                //this.scene.remove(_girl);
-                if(!_girl.dead){
+                //_girl.numHits++;
+                if(!_girl.dead && !_girl.justGotHit){
+                    _girl.numHits++;
+                    _girl.justGotHit = true;
+                    setTimeout(function(){
+                         _girl.justGotHit = false; 
+                    }, 1000);
+
                     _girl.remove(_girl.children[0]);
-                    _girl.add(_girl.bloodSplatMovie);
-                    this.bloodSplatMaterial.playVideo();
-                    this.girlToRemove = _girl;
-                    setTimeout(function(){ _self.scene.remove(_girl) }, 1600);
+                    
+                    console.log("_girl.numHits: " + _girl.numHits);
+                    if(_girl.numHits == 1){
+                        _girl.add(_girl.movie2);
+                        this.movie2Material.playVideo();
+                    }
+                    else
+                    if(_girl.numHits == 2){
+                        _girl.add(_girl.bloodSplatMovie);
+                        this.bloodSplatMaterial.playVideo();
+                        _girl.dead = true;
+                        //this.scene.remove(_girl);
+                        setTimeout(function(){ _self.scene.remove(_girl) }, 1600);
+                    }
+                    //this.girlToRemove = _girl;
+                    //setTimeout(function(){ _self.scene.remove(_girl) }, 1600);
                     this.audio.play();
-                    _girl.dead = true;
                     console.log("killed _girl");
                 }
                 //_girl.translateX(100);
@@ -318,14 +336,18 @@ Shooter3d.prototype.setupScene = function(){
     
     // Start Chroma
     //this.movieMaterial = new ChromaKeyMaterial('./video/cat.mp4', 596, 336, 0xd400);
-    this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 596, 336, 0xd400, true);
+    this.movieMaterial = new ChromaKeyMaterial('./video/santaClaus.mp4', 
+                                                            596, 336, 0xd400, true, true, false);
     //this.movieMaterial = new ChromaKeyMaterial('./video/robot.mp4', 596, 336, 0xd400, true);
     //this.movieMaterial = new ChromaKeyMaterial('./video/chickDancing.mp4', 596, 336, 0xd400, true);
     //this.movieMaterial = new ChromaKeyMaterial('./video/guyReadPaper.mp4', 596, 336, 0xd400, true);
 
-    this.bloodSplatMaterial = new ChromaKeyMaterial('./video/bloodExplode.mp4', 596, 336, 0xd400, false);
-    //this.bloodSplatMaterial = new ChromaKeyMaterial('./video/soldier.mp4', 596, 336, 0xd400, false);
-	
+    this.movie2Material = new ChromaKeyMaterial('./video/santaClaus_gotMe.mp4', 
+                                                            596, 336, 0xd400, false, true, false);
+    console.log("this.movie2Material: %o", this.movie2Material);
+    this.bloodSplatMaterial = new ChromaKeyMaterial('./video/bloodExplode.mp4', 
+                                                            596, 336, 0xd400, false, false, true);
+    console.log("this.bloodSplatMaterial: %o", this.bloodSplatMaterial);
     var movieGeometry = new THREE.PlaneGeometry(596, 336, 4, 4);
 
 	this.girls = [];
@@ -334,13 +356,19 @@ Shooter3d.prototype.setupScene = function(){
 			if ((i + j) % 2 == 0) {
 				var girl = new THREE.Object3D();
 				var movie = new THREE.Mesh(movieGeometry, this.movieMaterial);
+				girl.movie2 = new THREE.Mesh(movieGeometry, this.movie2Material);
 				girl.bloodSplatMovie = new THREE.Mesh(movieGeometry, this.bloodSplatMaterial);
+                
 				movie.position.set(0, 53, 0);
+				girl.movie2.position.set(-45, 53, 0);
 				girl.bloodSplatMovie.position.set(-20, 0, 0);
+				//girl.bloodSplatMovie.position.set(-20, 0, 0);
 
 				//var girl = new THREE.Object3D();
 				girl.position.set(150 * (i *4), -50, 300 * (j - 2));
                 girl.dead = false;
+                girl.numHits = 0;
+                girl.justGotHit = false;
 
 				girl.add(movie);
                 //girl.add(girl.bloodSplatMovie);
@@ -349,6 +377,7 @@ Shooter3d.prototype.setupScene = function(){
 				this.scene.add(girl);
                 this.girls.push(girl);
             }
+
 
 }
 Shooter3d.prototype.setHitSound = function(){

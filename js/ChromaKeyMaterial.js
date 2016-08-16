@@ -1,11 +1,15 @@
-function ChromaKeyMaterial(url, width, height, keyColor, autoPlay) {
+function ChromaKeyMaterial(url, width, height, keyColor, autoPlay, loop, alwaysStartAtZero){
 	THREE.ShaderMaterial.call(this);
+	this.alwaysStartAtZero = alwaysStartAtZero;
 
 	this.video = document.createElement('video');
 	this.video.src = url;
 	this.videoLoaded = false;
-	if(autoPlay){
+	if(loop){
 		this.video.loop = true;
+	}
+	if(autoPlay){
+		//this.video.loop = true;
 		this.video.load();
 		this.videoLoaded = true;
 		this.video.play();
@@ -60,15 +64,17 @@ function ChromaKeyMaterial(url, width, height, keyColor, autoPlay) {
 ChromaKeyMaterial.prototype = Object.create(THREE.ShaderMaterial.prototype);
 
 ChromaKeyMaterial.prototype.playVideo = function(){
-    console.log("PlayVideo");
 	if(!this.videoLoaded){
+    	console.log("PlayVideo: %o", this.video);
 		this.video.load();
-    	this.video.play();
+    	//this.video.play();
 		this.videoLoaded = true;
 	}
-	else{
+	else
+	if(this.alwaysStartAtZero){
 		this.video.currentTime = 0;
 	}
+	
     this.video.play();
 }
 
