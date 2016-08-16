@@ -360,7 +360,7 @@ Shooter3d.prototype.setupScene = function(){
 				girl.bloodSplatMovie = new THREE.Mesh(movieGeometry, this.bloodSplatMaterial);
                 
 				movie.position.set(0, 53, 0);
-				girl.movie2.position.set(0, 53, 0);
+				girl.movie2.position.set(-45, 53, 0);
 				girl.bloodSplatMovie.position.set(-20, 0, 0);
 				//girl.bloodSplatMovie.position.set(-20, 0, 0);
 
@@ -377,7 +377,7 @@ Shooter3d.prototype.setupScene = function(){
 				this.scene.add(girl);
                 this.girls.push(girl);
             }
-            
+
 
 }
 Shooter3d.prototype.setHitSound = function(){
